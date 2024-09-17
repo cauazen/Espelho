@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Espelhos</title>
+    <style>
+      body {
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: rgb(255, 255, 255);
+}
+
+label, input, button {
+    display: block;
+    margin-bottom: 10px;
+   
+    border-radius: 10px;
+}
+
+#result {
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+.error {
+    animation: pulseShadow 2s infinite;
+}
+
+@keyframes pulseShadow {
+    0% {
+        box-shadow: 0 0 75px rgb(17, 0, 253);
+    }
+    50% {
+        box-shadow: 0 0 125px rgb(204, 0, 255);
+    }
+    100% {
+        box-shadow: 0 0 250px rgba(255, 0, 0, 0.986);
+    }
+}
+
+    </style>
+</head>
+<body>
+    <h1>Calculadora de Espelhos</h1>
+    <form id="mirrorForm">
+        <label for="F">Distância Focal do Espelho (F):</label>
+        <input type="number" id="F" required>
+        
+        <label for="P">Distância do Objeto ao Espelho (P):</label>
+        <input type="number" id="P" required>
+        
+        <label for="Y">Altura do Objeto (Y):</label>
+        <input type="number" id="Y" required>
+        
+        <button type="button" onclick="calcular()">Calcular</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        function calcular() {
+    let F = document.getElementById('F').value;
+    let P = document.getElementById('P').value;
+    let Y = document.getElementById('Y').value;
+
+    let resultado = document.getElementById('result');
+    resultado.innerHTML = ''; // Limpa os resultados anteriores
+    resultado.classList.remove('error'); // Remove a classe de erro anterior
+
+    // Verifica se o campo F está vazio
+    if (F === '') {
+        resultado.innerHTML = "<p>Por favor, insira um valor para a distância focal (F). Cálculo encerrado.</p>";
+        resultado.classList.add('error'); // Adiciona a classe de erro
+        return; // Encerra o programa se F estiver vazio
+    }
+
+    F = parseFloat(F);
+    P = parseFloat(P);
+    Y = parseFloat(Y);
+
+    if (F === 0) {
+        resultado.innerHTML = "Espelho plano. Cálculo encerrado.";
+        resultado.classList.add('error'); // Adiciona a classe de erro
+        return;
+    }
+
+    if (P <= 0) {
+        resultado.innerHTML += "<p>A distância entre o objeto e o espelho precisa ser positiva.</p>";
+        resultado.classList.add('error'); // Adiciona a classe de erro
+        return;
+    }
+
+    if (F > 0) {
+        resultado.innerHTML += "<p>Espelho côncavo</p>";
+    } else {
+        resultado.innerHTML += "<p>Espelho convexo</p>";
+    }
+
+    if (Y > 0) {
+        resultado.innerHTML += "<p>O objeto está para cima.</p>";
+    } else if (Y === 0) {
+        resultado.innerHTML += "<p>O objeto está em um ponto (altura zero).</p>";
+    } else {
+        resultado.innerHTML += "<p>O objeto está para baixo.</p>";
+    }
+
+    let p1 = (F * P) / (F - P);
+
+    if (p1 > 0) {
+        resultado.innerHTML += "<p>A imagem é real (fora do espelho).</p>";
+    } else {
+        resultado.innerHTML += "<p>A imagem é virtual (dentro do espelho).</p>";
+    }
+
+    let A = p1 / P;
+
+    if (A > 0) {
+        resultado.innerHTML += "<p>A imagem é direita em relação ao objeto.</p>";
+    } else {
+        resultado.innerHTML += "<p>A imagem é invertida em relação ao objeto.</p>";
+    }
+
+    if (Math.abs(A) > 1) {
+        resultado.innerHTML += "<p>A imagem é maior que o objeto (ampliada).</p>";
+    } else if (Math.abs(A) < 1) {
+        resultado.innerHTML += "<p>A imagem é menor que o objeto (reduzida).</p>";
+    } else {
+        resultado.innerHTML += "<p>A imagem tem o mesmo tamanho que o objeto.</p>";
+    }
+
+    let alturaImagem = Math.abs(A) * Y;
+    resultado.innerHTML += "<p>A altura da imagem é " + alturaImagem.toFixed(2) + " unidades.</p>";
+}
+
+    </script>
+</body>
+</html>
